@@ -37,7 +37,11 @@ public class Main {
     }
 
     private static void startNewGame() {
+        Game game = new Game(rows, columns, enemies, transistors, moves);
 
+        game.fillFieldIfEmpty();
+
+        game.startGame();
     }
 
     private static void showInfoAboutAuthor() {

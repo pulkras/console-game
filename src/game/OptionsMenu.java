@@ -46,15 +46,15 @@ public class OptionsMenu {
         }
         else if(changes.equals("2")) {
             System.out.println("enter a new value for rows: ");
-            Main.rows = scanner.nextInt();
+            Main.rows = Integer.parseInt(scanner.nextLine());
             System.out.println("enter a new value for columns: ");
-            Main.columns = scanner.nextInt();
+            Main.columns = Integer.parseInt(scanner.nextLine());
             System.out.println("enter a new value for enemies: ");
-            Main.enemies = scanner.nextInt();
+            Main.enemies = Integer.parseInt(scanner.nextLine());
             System.out.println("enter a new value for transistors: ");
-            Main.transistors = scanner.nextInt();
+            Main.transistors = Integer.parseInt(scanner.nextLine());
             System.out.println("enter a new value for moves: ");
-            Main.moves = scanner.nextInt();
+            Main.moves = Integer.parseInt(scanner.nextLine());
         }
     }
     public static void changeOneOptionManually() {
@@ -68,19 +68,19 @@ public class OptionsMenu {
         System.out.println("Write your number");
         switch (optionToChoose) {
             case "1":
-                Main.rows = scanner.nextInt();
+                Main.rows = Integer.parseInt(scanner.nextLine());
                 break;
             case "2":
-                Main.columns = scanner.nextInt();
+                Main.columns = Integer.parseInt(scanner.nextLine());
                 break;
             case "3":
-                Main.enemies = scanner.nextInt();
+                Main.enemies = Integer.parseInt(scanner.nextLine());
                 break;
             case "4":
-                Main.transistors = scanner.nextInt();
+                Main.transistors = Integer.parseInt(scanner.nextLine());
                 break;
             case "5":
-                Main.moves = scanner.nextInt();
+                Main.moves = Integer.parseInt(scanner.nextLine());
                 break;
 
         }
