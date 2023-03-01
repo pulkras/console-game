@@ -4,11 +4,13 @@ import java.util.Scanner;
 
 public class Main {
 
-    public static int rows=4;
-    public static int columns=4;
-    public static int enemies=5;
-    public static int transistors=40;
-    public static int moves=20;
+    public static int rows = 4;
+    public static int columns = 4;
+    public static int enemies = 5;
+    public static int transistors = 40;
+    public static int moves = 20;
+
+    public static int flowers = 10;
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -27,17 +29,17 @@ public class Main {
 
             if (command.equals("1"))
                 startNewGame();
-            else if(command.equals("2"))
+            else if (command.equals("2"))
                 OptionsMenu.showOptions();
-            else if(command.equals("3"))
+            else if (command.equals("3"))
                 showInfoAboutAuthor();
-            else if(!command.equals("4"))
+            else if (!command.equals("4"))
                 System.out.println("please try again to choose a number.");
-        } while(!command.equals("4"));
+        } while (!command.equals("4"));
     }
 
     private static void startNewGame() {
-        Game game = new Game(rows, columns, enemies, transistors, moves);
+        Game game = new Game(rows, columns, enemies, transistors, moves, flowers);
 
         game.fillFieldIfEmpty();
 

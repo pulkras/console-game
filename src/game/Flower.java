@@ -14,6 +14,6 @@ public class Flower implements Fieldable {
 
     @Override
     public String getSymbol() {
-        return ""; // transistors;
+        return String.valueOf(transistors);
     }
 }

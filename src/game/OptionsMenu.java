@@ -35,7 +35,8 @@ public class OptionsMenu {
                 "columns: " + Main.columns + "\n" +
                 "enemies: " + Main.enemies + "\n" +
                 "transistors: " + Main.transistors + "\n" +
-                "moves: " + Main.moves);
+                "moves: " + Main.moves + "\n" +
+                "flowers " + Main.flowers);
     }
 
     public static void changeSettings() {
@@ -55,6 +56,8 @@ public class OptionsMenu {
             Main.transistors = Integer.parseInt(scanner.nextLine());
             System.out.println("enter a new value for moves: ");
             Main.moves = Integer.parseInt(scanner.nextLine());
+            System.out.println("enter a new value of flowers amount");
+            Main.flowers = Integer.parseInt(scanner.nextLine());
         }
     }
     public static void changeOneOptionManually() {
@@ -63,7 +66,8 @@ public class OptionsMenu {
                 "put 2 to change amount of columns\n" +
                 "put 3 to change amount of enemies\n" +
                 "put 4 to change amount of transistors\n" +
-                "or put 5 to change your moves");
+                "put 5 to change your moves\n" +
+                "or put 6 to change amount of flowers");
         optionToChoose = scanner.nextLine();
         System.out.println("Write your number");
         switch (optionToChoose) {
@@ -82,6 +86,8 @@ public class OptionsMenu {
             case "5":
                 Main.moves = Integer.parseInt(scanner.nextLine());
                 break;
+            case "6":
+                Main.flowers = Integer.parseInt(scanner.nextLine());
 
         }
     }
