@@ -13,16 +13,21 @@ public class Player implements Fieldable {
 
     private Field field;
 
+    private Game game;
+
     @Override
     public String getSymbol() {
         return " $ ";
     }
 
-    public Player(int rowIndex, int columnIndex, Field field) {
+    public Player(int rowIndex, int columnIndex, Game game) {
         this.rowIndex = rowIndex;
         this.columnIndex = columnIndex;
-        this.field = field;
+        this.game = game;
+        this.field = game.getField();
+        field.setField(rowIndex, columnIndex, this);
     }
+
 
     public int getRowIndex() {
         return rowIndex;
@@ -40,26 +45,57 @@ public class Player implements Fieldable {
         this.columnIndex = columnIndex;
     }
 
-    public void makeMove(String movesComand) {
-        if(movesComand.equals(MOVE_LEFT))
-            movePlayer(-1, 0);
-        else if(movesComand.equals(MOVE_RIGHT))
-            movePlayer(+1, 0);
-        else if(movesComand.equals(MOVE_UP))
-            movePlayer(0, -1);
-        else if(movesComand.equals(MOVE_DOWN))
-        movePlayer(0, +1);
-        else if(movesComand.equals(NO_MOVE))
-        movePlayer(0, 0);
+    public Boolean makeMove(String movesCommand) {
+        Boolean isItACorrectMove = true;
+
+        if(movesCommand.equals(MOVE_LEFT))
+            isItACorrectMove = movePlayer(0, -1);
+        else if(movesCommand.equals(MOVE_RIGHT))
+            isItACorrectMove = movePlayer(0, 1);
+        else if(movesCommand.equals(MOVE_UP))
+            isItACorrectMove = movePlayer(-1, 0);
+        else if(movesCommand.equals(MOVE_DOWN))
+            isItACorrectMove = movePlayer(1, 0);
+        else if(movesCommand.equals(NO_MOVE))
+            isItACorrectMove = false;
         else
             showError();
+        return isItACorrectMove;
     }
 
-    private void movePlayer(int coordinateX, int coordinateY) {
+    private Boolean movePlayer(int deltaRowIndex, int deltaColumnIndex) {
 
+        int newRowIndex = rowIndex + deltaRowIndex;
+        int newColumnIndex = columnIndex + deltaColumnIndex;
+
+        if((newRowIndex >= 0) && (newRowIndex < field.getRows())
+            && (newColumnIndex >= 0) && (newColumnIndex < field.getColumns())
+            && !((field.getField(newRowIndex, newColumnIndex)) instanceof Enemy)) {
+            if(field.getField(newRowIndex, newColumnIndex) instanceof Flower) {
+                Flower flowerIndex = (Flower) field.getField(newRowIndex, newColumnIndex);
+                game.setTransistorsGathered(flowerIndex.getTransistors());
+                game.getFlowerArrayList().remove(flowerIndex);
+                swapPlayer(newRowIndex, newColumnIndex);
+            }
+
+            if(field.getField(newRowIndex, newColumnIndex) instanceof Empty) {
+                swapPlayer(newRowIndex, newColumnIndex);
+            }
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 
-    private void showError(String command) {
+    private void swapPlayer(int newRowIndex, int newColumnIndex) {
+        field.setField(newRowIndex, newColumnIndex, this);
+        field.setField(rowIndex, columnIndex, new Empty());
+        rowIndex = newRowIndex;
+        columnIndex = newColumnIndex;
+    }
+
+    private void showError() {
         System.out.println("Sorry, there is no such type of command");
     }
 }

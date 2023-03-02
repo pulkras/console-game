@@ -2,6 +2,7 @@ package game;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
 
 public class Game {
     private int rows;
@@ -26,6 +27,12 @@ public class Game {
 
     private Random randomNumber = new Random();
 
+    private Player player;
+
+    private Scanner scanner = new Scanner(System.in);
+
+    private Boolean isItACorrectCommand = true;
+
 
     public Game(int rows, int columns, int enemies, int transistorsNeeded, int movesLeft, int flowers) {
         this.rows = rows;
@@ -35,6 +42,18 @@ public class Game {
         this.movesLeft = movesLeft;
         this.flowers = flowers;
         field = new Field(rows,columns);
+    }
+
+    public Field getField() {
+        return this.field;
+    }
+
+    public ArrayList<Flower> getFlowerArrayList() {
+        return this.flowerArrayList;
+    }
+
+    public void setTransistorsGathered(int transistorsAdded) {
+        this.transistorsGathered += transistorsAdded;
     }
 
     public void fillFieldIfEmpty() {
@@ -54,7 +73,9 @@ public class Game {
             showField();
 
             playerMove();
-
+            if(isItACorrectCommand) {
+                continue;
+            }
             botMove();
 
             checkIfGameIsFinished();
@@ -63,6 +84,10 @@ public class Game {
 
 
     private void playerPose() {
+
+        int playerRowsPosition = randomNumber.nextInt(rows);
+        int playerColumnsPosition = randomNumber.nextInt(columns);
+        player = new Player(playerRowsPosition, playerColumnsPosition, this);
     }
 
     private void enemiesPoses() {
@@ -81,11 +106,13 @@ public class Game {
     }
 
     private void playerMove() {
-
+        System.out.println("Please put your command and press Enter");
+        String command = scanner.nextLine();
+        player.makeMove(command);
     }
 
     private void botMove() {
-
+        movesLeft--;
     }
 
     private void generateFlowers() {
@@ -101,7 +128,7 @@ public class Game {
             }
 
             else if(field.getField(flowerRowsPosition, flowerColumnsPosition) instanceof Empty) {
-                Flower flower = new Flower(flowerTransistors);
+                Flower flower = new Flower(flowerTransistors, flowerRowsPosition, flowerColumnsPosition);
 
                 field.setField(flowerRowsPosition, flowerColumnsPosition, flower);
 
