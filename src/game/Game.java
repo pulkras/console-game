@@ -1,5 +1,6 @@
 package game;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
@@ -24,6 +25,8 @@ public class Game {
     private boolean gameIsFinished;
 
     private ArrayList<Flower> flowerArrayList = new ArrayList<Flower>();
+
+    private ArrayList<Enemy> enemyArrayList = new ArrayList<Enemy>();
 
     private Random randomNumber = new Random();
 
@@ -74,12 +77,17 @@ public class Game {
 
             playerMove();
             if(isItACorrectCommand) {
+                incorrectCommand();
                 continue;
             }
             botMove();
 
             checkIfGameIsFinished();
         }
+    }
+
+    private void incorrectCommand() {
+        System.out.println("You entered an incorrect command. please, try again");
     }
 
 
@@ -91,10 +99,11 @@ public class Game {
     }
 
     private void enemiesPoses() {
+        generate(enemies, enemyArrayList);
     }
 
     private void flowersPoses() {
-        generateFlowers();
+        generate(flowers, flowerArrayList);
     }
 
 
@@ -112,27 +121,87 @@ public class Game {
     }
 
     private void botMove() {
+        enemyMove();
+
+        generate(flowers, flowerArrayList);
+
         movesLeft--;
     }
 
-    private void generateFlowers() {
+    private void enemyMove() {
 
-        for(int i = flowers - flowerArrayList.size(); i > 0;) {
-            int flowerTransistors = randomNumber.nextInt(9) + 1;
-            int flowerRowsPosition = randomNumber.nextInt(rows);
-            int flowerColumnsPosition = randomNumber.nextInt(columns);
+        int rowIndex = 0;
+        int columnIndex = 0;
+        int newRowIndex = 0;
+        int newColumnIndex = 0;
+        int regenerateIndex = 0;
+        boolean isNeededToRegenerate = true;
 
-            if(field.getField(flowerRowsPosition, flowerColumnsPosition) instanceof Player) {
-                transistorsGathered += flowerTransistors;
-                i--;
-            }
+        for(Enemy enemy : enemyArrayList) {
 
-            else if(field.getField(flowerRowsPosition, flowerColumnsPosition) instanceof Empty) {
-                Flower flower = new Flower(flowerTransistors, flowerRowsPosition, flowerColumnsPosition);
+            rowIndex = enemy.getRowIndex();
+            columnIndex = enemy.getColumnIndex();
+            do {
+                int deltaRow = randomNumber.nextInt(3) - 1;
+                int deltaColumn = randomNumber.nextInt(3) - 1;
+                newRowIndex = rowIndex + deltaRow;
+                newColumnIndex = columnIndex + deltaColumn;
 
-                field.setField(flowerRowsPosition, flowerColumnsPosition, flower);
+                if((newRowIndex < 0) || (newColumnIndex < 0) ||
+                newRowIndex >= field.getRows() || (newColumnIndex >= field.getColumns()) ||
+                field.getField(newRowIndex, newColumnIndex) instanceof Player || field.getField(newRowIndex, newColumnIndex) instanceof Enemy) {
+                    regenerateIndex++;
+                    isNeededToRegenerate = true;
+                } else {
+                    if(field.getField(newRowIndex, newColumnIndex) instanceof Flower) {
+                        Flower flowerIndex = (Flower) field.getField(newRowIndex, newColumnIndex);
+                        flowerArrayList.remove(flowerIndex);
 
-                flowerArrayList.add(flower);
+                        isNeededToRegenerate = swapEnemy(rowIndex, columnIndex, newRowIndex, newColumnIndex, enemy);
+
+                    } else {
+                        isNeededToRegenerate = swapEnemy(rowIndex, columnIndex, newRowIndex, newColumnIndex, enemy);
+                    }
+                }
+
+            } while (isNeededToRegenerate && regenerateIndex <= 10);
+        }
+    }
+
+    private boolean swapEnemy(int rowIndex, int columnIndex, int newRowIndex, int newColumnIndex, Enemy enemy) {
+        field.setField(newRowIndex, newColumnIndex, enemy);
+        field.setField(rowIndex, columnIndex, new Empty());
+
+        enemy.setRowIndex(newRowIndex);
+        enemy.setColumnIndex(newColumnIndex);
+
+        return false;
+    }
+
+    private void generate(int typeAmount, ArrayList typeArrayList) {
+        for(int i = typeAmount - typeArrayList.size(); i > 0;) {
+            int typeRowsPosition = randomNumber.nextInt(rows);
+            int typeColumnsPosition = randomNumber.nextInt(columns);
+
+            if (typeArrayList.equals(flowerArrayList)) {
+                int flowerTransistors = randomNumber.nextInt(9) + 1;
+                if (field.getField(typeRowsPosition, typeColumnsPosition) instanceof Player) {
+                    transistorsGathered += flowerTransistors;
+                    i--;
+                } else if (field.getField(typeRowsPosition, typeColumnsPosition) instanceof Empty) {
+                    Flower flower = new Flower(flowerTransistors, typeRowsPosition, typeColumnsPosition);
+
+                    field.setField(typeRowsPosition, typeColumnsPosition, flower);
+
+                    flowerArrayList.add(flower);
+                    i--;
+                }
+            } else if(typeArrayList.equals(enemyArrayList) && field.getField(typeRowsPosition, typeColumnsPosition) instanceof Empty) {
+                Enemy enemy = new Enemy(typeRowsPosition, typeColumnsPosition);
+
+                field.setField(typeRowsPosition, typeColumnsPosition, enemy);
+
+                enemyArrayList.add(enemy);
                 i--;
             }
         }
