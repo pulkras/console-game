@@ -41,25 +41,53 @@ public class OptionsMenu {
 
     public static void changeSettings() {
         System.out.println("Put 1 to change one option or 2 to change more");
+
         changes = scanner.nextLine();
-        if(changes.equals("1")) {
+        if (changes.equals("1")) {
             changeOneOptionManually();
         }
-        else if(changes.equals("2")) {
-            System.out.println("enter a new value for rows: ");
-            Main.rows = Integer.parseInt(scanner.nextLine());
-            System.out.println("enter a new value for columns: ");
-            Main.columns = Integer.parseInt(scanner.nextLine());
-            System.out.println("enter a new value for enemies: ");
-            Main.enemies = Integer.parseInt(scanner.nextLine());
-            System.out.println("enter a new value for transistors: ");
-            Main.transistors = Integer.parseInt(scanner.nextLine());
-            System.out.println("enter a new value for moves: ");
-            Main.moves = Integer.parseInt(scanner.nextLine());
-            System.out.println("enter a new value of flowers amount");
-            Main.flowers = Integer.parseInt(scanner.nextLine());
+        if (changes.equals("2")) {
+            changeAllOptions();
         }
     }
+
+    public static void changeAllOptions() {
+        System.out.println("enter a new value for rows, leave blank to keep current value:");
+
+        Main.rows = Integer.parseInt(scanner.nextLine());
+
+        System.out.println("enter a new value for columns, leave blank to keep current value:");
+
+        Main.columns = Integer.parseInt(scanner.nextLine());
+
+        System.out.println("enter a new value for enemies, leave blank to keep current value:");
+
+        Main.enemies = Integer.parseInt(scanner.nextLine());
+
+        System.out.println("enter a new value for transistors, leave blank to keep current value:");
+
+        Main.transistors = Integer.parseInt(scanner.nextLine());
+
+        System.out.println("enter a new value for moves, leave blank to keep current value:");
+
+        Main.moves = Integer.parseInt(scanner.nextLine());
+
+        System.out.println("enter a new value of flowers amount, leave blank to keep current value:");
+
+        Main.flowers = Integer.parseInt(scanner.nextLine());
+
+        if(!isValuesPlayable()) {
+            System.out.println("Values you entered are not playable. please, verify again. now settings return to default");
+            Main.rows = 12;
+            Main.columns = 20;
+            Main.enemies = 20;
+            Main.transistors = 100;
+            Main.moves = 40;
+            Main.flowers = 20;
+        }
+
+    }
+
     public static void changeOneOptionManually() {
         System.out.println("what option do you want to change?\n" +
                 "put 1 to change amount of rows\n" +
@@ -88,7 +116,30 @@ public class OptionsMenu {
                 break;
             case "6":
                 Main.flowers = Integer.parseInt(scanner.nextLine());
+                break;
 
         }
+        if(!isValuesPlayable()) {
+            System.out.println("Values you entered are not playable. please, verify again. now settings return to default");
+            Main.rows = 12;
+            Main.columns = 20;
+            Main.enemies = 20;
+            Main.transistors = 100;
+            Main.moves = 40;
+            Main.flowers = 20;
+        }
     }
+
+    private static Boolean isValuesPlayable() {
+        int fieldSize = Main.rows * Main.columns;
+
+        int allGameObjects = Main.enemies + Main.flowers + 1;
+
+        boolean isValuesPlayable = ((allGameObjects / fieldSize) < 0.75);
+
+        return isValuesPlayable;
+    }
+
+
+
 }

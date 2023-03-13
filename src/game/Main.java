@@ -4,13 +4,13 @@ import java.util.Scanner;
 
 public class Main {
 
-    public static int rows = 10;
-    public static int columns = 10;
-    public static int enemies = 5;
-    public static int transistors = 20;
-    public static int moves = 20;
+    public static int rows = 12;
+    public static int columns = 20;
+    public static int enemies = 20;
+    public static int transistors = 100;
+    public static int moves = 40;
 
-    public static int flowers = 5;
+    public static int flowers = 10;
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
